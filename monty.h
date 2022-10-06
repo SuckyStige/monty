@@ -1,30 +1,15 @@
-#ifndef MONTY_H
-#define MONTY_H
+#ifndef _MONTY_H_
+#define _MONTY_H_
 
-#include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
-#define INSTRUCTIONS              \
-	{                           \
-		{"push", push},       \
-		    {"pall", pall},   \
-		    {"pint", pint},   \
-		    {"pop", pop},     \
-		    {"swap", swap},   \
-		    {"nop", nop},     \
-		    {"div", _div},    \
-		    {"mul", _mul},    \
-		    {"add", _add},    \
-		    {"sub", _sub},    \
-		    {"mod", mod},     \
-		    {"pchar", pchar}, \
-		    {"pstr", pstr},   \
-		    {"rotl", rotl},   \
-		    {"rotr", rotr},   \
-		{                     \
-			NULL, NULL      \
-		}                     \
-	}
+/*extern variable, stack or queue*/
+
+extern char *flag;
+
+#define LINE_LENGTH 32
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -33,7 +18,7 @@
  * @next: points to the next element of the stack (or queue)
  *
  * Description: doubly linked list node structure
- * for stack, queues, LIFO, FIFO
+ * for stack, queues, LIFO, FIFO Holberton project
  */
 typedef struct stack_s
 {
@@ -43,12 +28,12 @@ typedef struct stack_s
 } stack_t;
 
 /**
- * struct instruction_s - opcode and its function
+ * struct instruction_s - opcoode and its function
  * @opcode: the opcode
  * @f: function to handle the opcode
  *
  * Description: opcode and its function
- * for stack, queues, LIFO, FIFO
+ * for stack, queues, LIFO, FIFO Holberton project
  */
 typedef struct instruction_s
 {
@@ -56,47 +41,49 @@ typedef struct instruction_s
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-/**
-* struct help - argument for the current opcode
-* @data_struct: stack mode, stack (default) and queue
-* @argument: the arguments of the string
-*
-* Description: global structure used to pass data around the functions easily
-*/
-typedef struct help
-{
-	int data_struct;
-	char *argument;
-} help;
-help global;
+/*basic functions related to doubly linked list*/
+stack_t *add_node(stack_t **head, const int n);
+void free_stack(stack_t *head);
+stack_t *pop_s(stack_t **head);
+stack_t *dequeue(stack_t **head);
 
-/* stack utility functions available in linked_list.c */
-stack_t *add_node(stack_t **stack, const int n);
-stack_t *queue_node(stack_t **stack, const int n);
-void free_stack(stack_t *stack);
-size_t print_stack(const stack_t *stack);
+/*functions to print the stack or queue*/
+void pall(stack_t **h, unsigned int l);
+void pstr(stack_t **h, unsigned int l);
+void pchar(stack_t **h, unsigned int l);
+void pint(stack_t **h, unsigned int l);
 
-void push(stack_t **stack, unsigned int line_cnt);
-void pall(stack_t **stack, unsigned int line_cnt);
-void pint(stack_t **stack, unsigned int line_cnt);
-void swap(stack_t **stack, unsigned int line_cnt);
-void pop(stack_t **stack, unsigned int line_cnt);
-void nop(stack_t **stack, unsigned int line_cnt);
+/*in push_and_pop*/
+void pop(stack_t **h, unsigned int l);
+void push (stack_t **h, char *line, unsigned int l);
 
-void _div(stack_t **stack, unsigned int line_cnt);
-void _add(stack_t **stack, unsigned int line_cnt);
-void _sub(stack_t **stack, unsigned int line_cnt);
-void _mul(stack_t **stack, unsigned int line_cnt);
-void mod(stack_t **stack, unsigned int line_cnt);
+/*in move_elements_functions*/
+void swap(stack_t **h, unsigned int l);
+void rotl(stack_t **h, unsigned int l);
+void rotr(stack_t **h, unsigned int l);
 
-void pchar(stack_t **stack, unsigned int line_cnt);
-void pstr(stack_t **stack, unsigned int line_cnt);
-void rotl(stack_t **stack, unsigned int line_count);
-void rotr(stack_t **stack, unsigned int line_count);
+/*in calculations*/
+int get_argument(stack_t **h, char *opcode, unsigned int l);
+void _add(stack_t **h, unsigned int l);
+void _sub(stack_t **h, unsigned int l);
+void _div(stack_t **h, unsigned int l);
+void _mul(stack_t **h, unsigned int l);
+void _mod(stack_t **h, unsigned int l);
 
-void opcode(stack_t **stack, char *str, unsigned int line_cnt);
+/*in nopandqueue*/
+void stack(stack_t **h, unsigned int l);
+void queue(stack_t **h, unsigned int l);
+void nop(stack_t **h, unsigned int l);
 
-int is_digit(char *string);
-int isnumber(char *str);
+/*in helpers*/
+char *skip_spaces(char *s);
+char *reach_number(char *s);
+int _strcmp(char *s1, char *s2);
+int _strncmp(char *s1, char *s2, int n);
+int _strlen(char *s);
 
-#endif /* MONTY_H */
+/*in execute*/
+void execute(stack_t **h, char *line, unsigned int line_number);
+/*in main*/
+int main(int ac, char **av);
+#endif
